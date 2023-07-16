@@ -1,0 +1,3 @@
+Java (Intermediário) e Python (Básico)
+HTML5 (Intermediário), CSS3 (Básico), JavaScript (Básico) e node.js (Básico)
+Java (Intermediário) e POO
