@@ -16,8 +16,8 @@ const checkAuth = function(req, res, next){
         console.log('Não esta logado, faça login para continuar')
     }
 }
-
-app.use(checkAuth)
+//middleware é algo que pode ser executado entre a req do usuario e a resposta
+app.use(checkAuth) //o middlewara pode ser executado atraves do método use no express
 
 app.get('/', (req, res)=>{
     res.sendFile(`${basePath}/index.html`)
