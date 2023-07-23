@@ -1,0 +1,9 @@
+<h1>Olá handlebars!</h1>
+<p>Usuario {{user.name}} {{user.surname}} está logado</p>
+<h2>{{tema}}</h2>
+
+{{#if auth}}
+<p>
+    Você está autenticado <a href="/dashboard">clique aqui</a> para acessar a área de membros
+</p>
+{{/if}}
