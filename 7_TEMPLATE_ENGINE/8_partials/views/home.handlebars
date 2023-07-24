@@ -1,0 +1,9 @@
+<h1>Olá handlebars</h1>
+<p>O usuario {{user.name}} {{user.surname}} está logado</p>
+<h2>{{texto}}</h2>
+
+{{#if auth}}
+<p>O usuario esta logado, <a href="/dashboard">clique aqui</a> para acessar a aréa de membros</p>
+{{else}}
+<p>O usuario não está logado</p>
+{{/if}}
