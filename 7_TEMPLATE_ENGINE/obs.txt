@@ -8,3 +8,6 @@ app.engine('handlebars', exphbs.engine())
 
 Basicamente, precisamos invocar este método engine, que antes era opicional para realizar algumas configurações extras, agora ele é obrigatório para o funcionamento do pacote
 
+Observação
+#each acessa o objeto/array usando apenas o {{each obj/arr}} {{this}}
+#with acessa o objeto/array usando apenas o nome da variavel {{with obj/arr}} {{nome_variavel}}
