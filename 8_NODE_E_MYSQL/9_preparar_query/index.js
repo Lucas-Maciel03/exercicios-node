@@ -6,7 +6,7 @@ const port = 3000
 
 app.use(express.static('public'))
 app.use(express.urlencoded({
-   extended: true 
+    extended: true
 }))
 app.use(express.json())
 
@@ -17,65 +17,29 @@ const hbs = exphbs.create({
 app.engine('handlebars', hbs.engine)
 app.set('view engine', 'handlebars')
 
-//Rota home
 app.get('/', (req, res) => {
     res.render('home')
 })
 
-//Create book
 app.post('/books/insertbook', (req, res) => {
     const title = req.body.title
     const pageqty = req.body.pageqty
 
-    const sql = `INSERT INTO books(title, pageqty) VALUES('${title}', '${pageqty}')`
+    const sql = `INSERT INTO books(??, ??) VALUES(?, ?)`
+    const data = ['title', 'pageqty', title, pageqty]
 
-    pool.query(sql, function(err){
+    pool.query(sql, data, function(err){
         if(err){
             console.log(err)
+            return
         }
-        
+
         res.redirect('/books')
     })
-
 })
 
-//Select books
 app.get('/books', (req, res) => {
-    const sql = `SELECT * FROM books`
-
-    pool.query(sql, function(err, data) {
-        if(err){
-            console.log(err)
-            return
-        }
-        const books = data
-        console.log(books)
-        res.render('books', {books})
-    })
-})
-
-//select books with id
-app.get('/books/:id', (req, res) => {
-    const id = req.params.id
-
-    const sql = `SELECT * FROM books WHERE id = ${id}`
-
-    pool.query(sql, function(err, data) {
-        if(err){
-            console.log(err)
-            return
-        }
-        const book = data[0]
-        console.log(book)
-        res.render('book', {book})
-    })
-})
-
-//Select book to update
-app.get('/books/edit/:id', (req, res) => {
-    const id = req.params.id 
-
-    const sql = `SELECT * FROM books WHERE id = ${id}`
+    const sql = 'SELECT * FROM books'
 
     pool.query(sql, function(err, data){
         if(err){
@@ -83,21 +47,54 @@ app.get('/books/edit/:id', (req, res) => {
             return
         }
 
+        const books = data
+        console.log(books)
+        res.render('books', {books})
+    })
+})
+
+app.get('/books/:id', (req, res) => {
+    const id = req.params.id
+
+    const sql = `SELECT * FROM books WHERE ?? = ?`
+    const data = ['id', id]
+
+    pool.query(sql, data, function(err, data){
+        if(err){
+            console.log(err)
+            return
+        }
+
+        const book = data[0]
+        res.render('book', {book})
+    })
+})
+
+app.get('/books/edit/:id', (req, res) => {
+    const id = req.params.id
+
+    const sql = `SELECT * FROM books WHERE ?? = ?`
+    const data = ['id', id]
+
+    pool.query(sql, data, function(err, data){
+        if(err){
+            console.log(err)
+            return
+        }
         const book = data[0]
         res.render('editbook', {book})
     })
-
-    
 })
-//post update book
+
 app.post('/books/updatebook', (req, res) => {
     const title = req.body.title
     const pageqty = req.body.pageqty
     const id = req.body.id
+    
+    const sql = `UPDATE books SET ?? = ?, ?? = ? WHERE ?? = ?`
+    const data = ['title', title, 'pageqty', pageqty, 'id', id]
 
-    const sql = `UPDATE books SET title = '${title}', pageqty = '${pageqty}' WHERE id = ${id}`
-
-    pool.query(sql, function(err) {
+    pool.query(sql, data, function(err) {
         if(err){
             console.log(err)
             return
@@ -107,19 +104,19 @@ app.post('/books/updatebook', (req, res) => {
     })
 })
 
-//post delete book
 app.post('/books/remove/:id', (req, res) => {
     const id = req.params.id
 
-    const sql = `DELETE FROM books WHERE id = ${id}`
+    const sql = `DELETE FROM books WHERE ?? = ?`
+    const data = ['id', id]
 
-    pool.query(sql, function(err){
+    pool.query(sql, data, function(err){
         if(err){
             console.log(err)
             return
         }
 
-       res.redirect('/books')
+        res.redirect('/books')
     })
 })
 
