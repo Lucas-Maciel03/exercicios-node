@@ -1,10 +1,10 @@
 const {DataTypes} = require('sequelize')
 
-const db = require('../db/conn')
-
 const User = require('./User')
 
-const Adress = db.define('Adress', {
+const db = require('../db/conn')
+
+const Address = db.define('Address', {
     street: {
         type: DataTypes.STRING,
         required: true
@@ -19,6 +19,6 @@ const Adress = db.define('Adress', {
     }
 })
 
-Adress.belongsTo(User) //Adress.pertence à um (User)
+Address.belongsTo(User) //Address.pertence à um (User)
 
-module.exports = Adress
+module.exports = Address
