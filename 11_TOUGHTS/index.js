@@ -8,6 +8,57 @@ const app = express()
 
 const conn = require('./db/conn')
 
+//template engine
+app.engine('handlebars', exphbs.engine())
+app.set('view engine', 'handlebars')
+
+//receber respostas do body
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+)
+
+app.use(express.json())
+
+//session middleware
+app.use(
+    session({
+        name: 'session', //session nome padrao
+        secret: 'nosso_secret', //para tornar a sessão inquebravel
+        resave: false, //se cair a sessão vai desconectar
+        saveUninitialized: false, //
+        store: new FileStore({
+            logFn: function(){}, //função de log, é necessaria para configurar seção por arquivos
+            path: require('path').join(require('os').tmpdir(), ('sessions')), //é o caminho para a pasta sessions           
+        }),
+        cookie: {
+            secure: false,
+            maxAge: 360000, //tempo de duração 360000 = 1 dia. Deixa de ser valido em 1 dia
+            expires: new Date(Date.now() + 360000), //vai expirar em 1 dia 
+            httpOnly: true //como é localhost nao da p config em https, 
+                           //em server de produção é necessario configurar para https
+        }
+    })
+)
+
+//flash messages
+app.use(flash())
+
+//public path
+app.use(express.static('public'))
+
+//set sessions to res 
+app.use((req, res, next) => {
+  
+    if(req.session.userId){ //verifica se o user tem essa seção
+        res.locals.session = req.session //pega a seção da req e manda pra res
+    }
+    
+    next()
+})
+
+
 conn.sync()
 .then(() => {
     app.listen(3000, () => console.log('Listen in port 3000'))
