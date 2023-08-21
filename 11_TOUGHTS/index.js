@@ -8,6 +8,11 @@ const app = express()
 
 const conn = require('./db/conn')
 
+
+//Models
+const Tought = require('./models/Tought')
+const User = require('./models/User')
+
 //template engine
 app.engine('handlebars', exphbs.engine())
 app.set('view engine', 'handlebars')
@@ -30,7 +35,7 @@ app.use(
         saveUninitialized: false, //
         store: new FileStore({
             logFn: function(){}, //função de log, é necessaria para configurar seção por arquivos
-            path: require('path').join(require('os').tmpdir(), ('sessions')), //é o caminho para a pasta sessions           
+            path: require('path').join(require('os').tmpdir(), 'sessions'), //é o caminho para a pasta sessions           
         }),
         cookie: {
             secure: false,
@@ -51,7 +56,7 @@ app.use(express.static('public'))
 //set sessions to res 
 app.use((req, res, next) => {
   
-    if(req.session.userId){ //verifica se o user tem essa seção
+    if(req.session.userid){ //verifica se o user tem essa seção
         res.locals.session = req.session //pega a seção da req e manda pra res
     }
     
