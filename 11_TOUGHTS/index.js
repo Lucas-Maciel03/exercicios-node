@@ -45,8 +45,8 @@ app.use(
         }),
         cookie: {
             secure: false,
-            maxAge: 360000, //tempo de duração 360000 = 1 dia. Deixa de ser valido em 1 dia
-            expires: new Date(Date.now() + 360000), //vai expirar em 1 dia 
+            maxAge: 3600000, //tempo de duração 360000 = 1 dia. Deixa de ser valido em 1 dia
+            expires: new Date(Date.now() + 3600000), //vai expirar em 1 dia 
             httpOnly: true //como é localhost nao da p config em https, 
                            //em server de produção é necessario configurar para https
         }
