@@ -206,6 +206,10 @@ form input[type="submit"]:hover,
     color: #f6982d;
 }
 
+.data-time {
+    color:#dddddd;
+}
+
 .home-header p, .home-header form {
     margin-bottom: 1.2em;
 }

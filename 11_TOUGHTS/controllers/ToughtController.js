@@ -1,7 +1,7 @@
 const Tought = require('../models/Tought')
 const User = require('../models/User')
 
-const {Op, or} = require('sequelize')
+const {Op} = require('sequelize')
 
 module.exports = class ToughtController {
     static async showToughts(req, res){
@@ -26,21 +26,32 @@ module.exports = class ToughtController {
                 title: {[Op.like]: `%${search}%`}
             },
             order: [['createdAt', order]]
-
         })
 
         const toughts = toughtsData.map((result) => result.get({plain: true}))
         //get vai jogar os dados de tought e user no mesmo array
-        
-        
-
+              
+        toughts.map((tought) => {
+            const rawDate = tought.createdAt
+            const formattedDate = new Date(rawDate).toLocaleString('pt-BR', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+            })
+            const formattedTime = new Date(rawDate).toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+            tought.createdAt = `${formattedDate} - ${formattedTime}`;
+        })
+          
         let toughtsQty = toughts.length
 
         if(toughtsQty === 0){
             toughtsQty = false
         }
 
-        res.render('toughts/home', {toughts, data, search, toughtsQty})
+        res.render('toughts/home', {toughts, search, toughtsQty})
     }
 
     static async dashboard(req, res){
