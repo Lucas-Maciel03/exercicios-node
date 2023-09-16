@@ -14,8 +14,8 @@ app.use(cors({ credentials: true, origin: 'http://localhost:5000' })) // origin 
 app.use(express.static('public'))
 
 // Routes
-const UserRoutes = require('./src/routes/UserRoutes')
-app.use('/users', UserRoutes)
+const userRoutes = require('./src/routes/userRoutes')
+app.use('/users', userRoutes)
 
 
 app.listen(3000, () => console.log('Listen in port 3000'))
