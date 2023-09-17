@@ -1,5 +1,9 @@
 const User = require('../models/User')
 
+const bcrypt = require('bcrypt')
+
+const createUserToken = require('../middlewares/create-user-token')
+
 module.exports = class UserController{
     static async register(req, res){
         const { name, email, phone, password, confirmpassword } = req.body
@@ -43,6 +47,24 @@ module.exports = class UserController{
             return
         }
 
-        res.status(200).json({ message: 'ok' })
-    } 
+        //create a password
+        const salt = await bcrypt.genSalt(12)
+        const hashPassword = await bcrypt.hash(password, salt)
+        
+        //create a user
+        const user = new User({
+            name: name,
+            email: email,
+            phone: phone,
+            password: hashPassword,
+        })
+
+        try {
+            const newUser = await user.save()
+
+            await createUserToken(newUser, req, res)
+        } catch (error) {
+            res.status(500).json({message: error})
+        }
+    }
 }
