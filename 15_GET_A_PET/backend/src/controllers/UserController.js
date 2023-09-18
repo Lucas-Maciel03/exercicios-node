@@ -1,5 +1,5 @@
 const User = require('../models/User')
-
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -121,5 +121,17 @@ module.exports = class UserController{
         } 
 
         res.status(200).send(currentUser)
+    }
+
+    static async getUserById(req, res){
+        const id = new mongoose.Types.ObjectId(req.params.id)
+        const user = await User.findById(id).select("-password") //remover o password
+
+        if(!user){
+            res.status(422).json({ message: "Usuário não encontrado" })
+            return
+        }
+
+        res.status(200).json({ user })
     }
 }
