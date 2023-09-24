@@ -5,7 +5,13 @@ const PetController = require('../controllers/PetController')
 
 //middlewares
 const verifyToken = require('../middlewares/verify-token')
+const { imageUpload } = require('../middlewares/image-upload')
 
-router.post('/create', verifyToken, PetController.create)
+router.post(
+    '/create',
+    verifyToken,
+    imageUpload.array('images'),
+    PetController.create
+)
 
 module.exports = router
