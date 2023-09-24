@@ -8,12 +8,15 @@ const Pet = mongoose.model(
             type: String,
             required: true
         },
-        email: {
-            type: String,
+        age: {
+            type: Number,
             required: true
         },
-        weight: {
+        description: {
             type: String,
+        },
+        weight: {
+            type: Number,
             required: true
         },
         color: {
