@@ -221,4 +221,53 @@ module.exports = class PetController{
             res.status(500).json({ message: error })
         }
     }
+
+    static async schedule(req, res){
+        const id = req.params.id
+
+        if(!ObjectId.isValid(id)){
+            res.status(422).json({ message: "ID inválido!" })
+            return
+        }
+
+        //check id Pet exists
+        const pet = await Pet.findById(id)
+
+        if(!pet){
+            res.status(422).json({ message: 'Pet não encontrado!' })
+            return
+        }
+
+        //check if user registered the pet
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+        
+        if(user._id.toString() === pet.user._id.toString()){
+            res.status(422).json({ message: 'Você não pode agendar visita com seu proprio pet!' })
+            return
+        }
+
+        //check if user has already scheduled a visit
+        if(pet.adopter){
+            if(pet.adopter._id.equals(user._id)){
+                res.status(422).json({ message: 'Você já agendou uma visita para este pet!' })
+                return
+            }
+        }
+
+        try {
+            //add user to pet
+            pet.adopter = {
+                _id: user._id,
+                name: user.name,
+                image: user.image
+            }
+
+            await Pet.findByIdAndUpdate(id, pet)
+
+            res.status(200).json({ message: `Visita agendada com sucesso, entre em contato com ${pet.user.name} pelo telefone ${pet.user.phone}` })
+        } catch (error) {
+            res.status(500).json({ message: error })
+        }
+    }
 }
