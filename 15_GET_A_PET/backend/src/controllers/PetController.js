@@ -270,4 +270,40 @@ module.exports = class PetController{
             res.status(500).json({ message: error })
         }
     }
+
+    static async concludeAdoption(req, res){
+        const id = req.params.id
+
+        if(!ObjectId.isValid(id)){
+            res.status(422).json({ message: 'ID inválido'})
+            return
+        }
+
+        //check if pet exists
+        const pet = await Pet.findById(id)
+
+        if(!pet){
+            res.status(404).json({ message: 'Pet não encontrado!' })
+            return
+        }
+
+        const token = getToken(req)
+        const user = await getUserByToken(token)
+
+        if(pet.user._id.toString() !== user._id.toString()){
+            res.status(422).json({ message: 'Houve um problema ao tentar realizar sua solicitação, tente novamente mais tarde!' })
+            return
+        }
+
+        pet.available = false
+
+        try {
+            await Pet.findByIdAndUpdate(id, pet)
+
+            res.status(200).json({ message: 'Parabéns! O ciclo de adoção foi concluido com sucesso!' })
+
+        } catch (error) {
+            res.status(500).json({ message: error })
+        }
+    }
 }
